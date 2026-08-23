@@ -1,3 +1,4 @@
+	
    class Student:
        def __init__(self, name, student_id):
            self.name = name
@@ -9,3 +10,4 @@
            if score < 0:
                raise ValueError("Score cannot be negative")
            self.scores.append(score)
+
