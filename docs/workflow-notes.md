@@ -1,28 +1,30 @@
-# Workflow Notes
+## Task 4 — Commit Hygiene Audit
 
-## Lab 1 Task 5 — Idea to Release Workflow
+**Last 10 commits (`git log --oneline -10`):**
+```
+9e681b4 docs: add Lab 1 Task 5 workflow notes
+24787ba Add notes on merge conflict resolution for roll_no rename
+29ff8cd Delete docs
+5b2844a Create docs
+3e7aac6 Delete docs
+5858970 fix(gradebook): clean up broken merge, restore valid Student class
+5e086f5 refactor(gradebook): rename roll_no to id_number (#4)
+1a1bf78 refactor(gradebook): rename roll_no to student_id (#3)
+1914867 Rename student_id to roll_no in Student class
+f521844 Rename roll_no to student_id in Student class
+```
 
-The flow of a change through the project, from idea to release, follows these stages:
+**Weakest commit messages rewritten:**
 
-1. **Issue** — A new requirement or bug is logged as a GitHub Issue, describing the problem and
-   expected outcome.
-2. **Branch** — A feature or fix branch is created from `main`, named after its purpose
-   (e.g. `feature/add-score`).
-3. **Commits** — The change is implemented in small, atomic commits following Conventional
-   Commits format.
-4. **Pull Request (PR)** — The branch is pushed and a PR is opened, linking back to the original
-   issue with "Closes #<n>".
-5. **Review** — A reviewer (or self-review, for solo work) examines the diff, leaves comments,
-   and requests changes if needed.
-6. **Merge** — Once approved and checks pass, the PR is squash-merged into `main`, keeping
-   history linear.
-7. **CI** — Automated checks (tests, linting) run against the merged code to catch regressions.
-8. **Release** — The verified `main` branch is tagged/released for use.
+1. Original: `Delete docs`
+   Rewritten: `chore(docs): remove broken docs folder before recreating workflow-notes.md`
+   Why it's better: The original gives no indication of *why* the folder was deleted or *what*
+   it was replaced with. The rewritten version follows Conventional Commits format, names the
+   type of change (`chore`), the affected scope (`docs`), and explains the reasoning.
 
-**Where QA typically intervenes:**
-- At the **Issue** stage, to clarify acceptance criteria.
-- At the **Review** stage, checking correctness, edge cases, and test coverage.
-- At the **CI** stage, verifying automated checks catch regressions before merge.
-- Before **Release**, doing a final sanity check that the build is stable.
-
----
+2. Original: `Rename student_id to roll_no in Student class`
+   Rewritten: `revert(gradebook): restore roll_no on main for Lab 2 Task 3 conflict exercise`
+   Why it's better: The original only describes the mechanical change but not the intent. The
+   rewritten version uses the `revert` type to signal this undoes a prior change, names the
+   scope (`gradebook`), and explains why the revert was needed (to reset main before the
+   deliberate conflict exercise).
