@@ -1,7 +1,7 @@
 class Student:
-    def __init__(self, name, roll_no):
+    def __init__(self, name, id_number):
         self.name = name
-        self.roll_no= roll_no
+        self.id_number=id_number
         self.scores = []
        def add_score(self, score):
             """Add a non-negative score to the student's score list."""
