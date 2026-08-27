@@ -7,3 +7,8 @@ def test_add_score_rejects_negative_score():
 
     with pytest.raises(ValueError):
         student.add_score(-10)
+        def test_add_score_rejects_negative_score():
+    student = Student("Ali", 101)
+
+    with pytest.raises(ValueError):
+        student.add_score(-10)
