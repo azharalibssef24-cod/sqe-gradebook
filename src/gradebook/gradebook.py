@@ -16,3 +16,8 @@ class Student:
         if score < 0:
             raise ValueError("Score cannot be negative")
         self.scores.append(score)
+
+    def average(self):
+        if not self.scores:
+            return 0.0
+        return sum(self.scores) / len(self.scores)
