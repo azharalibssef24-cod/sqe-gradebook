@@ -18,7 +18,7 @@
 | TC-03     | PASS    | Non-numeric input `"abc"` was rejected with a `TypeError` and was not added.                      |
 | TC-04     | PASS    | Boundary score `0` was accepted successfully.                                                     |
 | TC-05     | PASS    | Boundary score `100` was accepted successfully.                                                   |
-| TC-06     | PASS    | Score `101` raised `ValueError: Score cannot be greater than 100`.                                |
+| TC-06     | PASS    | | TC-06 | PASS | Score `101` raised `ValueError: Score cannot be greater than 100`. Original defect: GitHub Issue #15; fixed and retested successfully. |                                |
 | TC-07     | PASS    | Scores `80`, `70`, and `90` produced an average of `80.0`.                                        |
 | TC-08     | PASS    | A student with no scores returned an average of `0.0`.                                            |
 | TC-09     | PASS    | Duplicate student ID was rejected with `ValueError: Student ID already exists`.                   |
