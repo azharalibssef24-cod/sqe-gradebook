@@ -1,58 +1,93 @@
 # Test Plan — SQE GradeBook
+
 ## 1. Introduction
 
-This test plan defines the testing approach for the SQE GradeBook project.
-The purpose of testing is to verify that student records, scores, and grade statistics behave correctly and that invalid inputs are handled appropriately.
-Testing will identify defects and provide evidence that the implemented functionality meets the defined requirements.
+This test plan defines the testing approach for the SQE GradeBook project. The purpose of testing is to verify that student records, score management, and average calculations behave correctly and that invalid inputs are handled appropriately. Testing will identify defects and provide evidence that the implemented functionality meets the defined requirements.
+
 ## 2. Test Items
 
-The primary test item is the SQE GradeBook software, with focus on the Student class and its student record, score management, and average calculation functionality. The tests will verify valid operations, invalid input handling, duplicate student ID handling, and correct grade statistics.
+The primary test item is the SQE GradeBook software, with focus on the `Student` class and its student record, score management, duplicate student ID validation, and average calculation functionality. Testing will cover valid operations, invalid score inputs, score boundaries, duplicate student IDs, and average calculations.
+
 ## 3. Features to be Tested
 
 The following features will be tested:
 
-- Student creation with a valid name and unique student ID.
-- Rejection of duplicate student IDs.
-- Adding valid student scores.
-- Rejection of negative scores.
-- Handling of invalid or non-numeric score input.
-- Calculation of the average for students with multiple scores.
-- Calculation of the average for a student with a single score.
-- Handling of the average for a student with no scores.
-- ## 4. Features Not to be Tested
+* Student creation with a valid name and unique student ID.
+* Rejection of duplicate student IDs.
+* Adding valid student scores.
+* Rejection of negative scores.
+* Rejection of scores greater than 100.
+* Rejection of non-numeric score input.
+* Acceptance of score boundary values 0 and 100.
+* Calculation of the average for students with multiple scores.
+* Calculation of the average for a student with no scores.
+* Case-insensitive student name comparison where applicable.
+
+## 4. Features Not to be Tested
 
 The following features are outside the scope of this lab:
 
-- User interface testing, because the project is being tested through Python code.
-- Database or external storage integration.
-- Performance and load testing.
-- Security and authentication testing.
-- Deployment and production environment testing.
-- ## 5. Test Approach
+* User interface testing, because the GradeBook functionality is being tested through Python code.
+* Database or external storage integration because the current implementation does not use an external database.
+* Performance and load testing because the lab focuses on functional correctness.
+* Security and authentication testing because authentication is not implemented in the current GradeBook module.
+* Deployment and production environment testing because testing is performed in the development environment.
 
-Testing will use manual functional testing of the GradeBook Python code. Each test case will be executed using defined preconditions and numbered steps, and the actual result will be compared with the expected result. Both positive tests using valid inputs and negative tests using invalid inputs or error conditions will be included. At least three negative/error-path test cases will be used to verify that the software handles invalid conditions correctly. Regression checks will be performed after defects are fixed to ensure that existing functionality continues to work.
-- Correct handling of score boundary values such as 0 and 100.
-- Case-insensitive student name comparison where applicable
-- ## 6. Pass/Fail Criteria
+## 5. Test Approach
 
-A test case will be marked PASS when the actual result matches the expected result and the required functionality behaves correctly. A test case will be marked FAIL when the actual result differs from the expected result or the required behavior is not achieved. A test case will be marked BLOCKED when it cannot be executed because of an unavailable dependency, environment problem, or other external condition. All test results will include a brief note explaining the observed outcome.
+Testing will use functional testing of the GradeBook Python code. Each test case will have a unique ID, requirement reference, objective, preconditions, numbered steps, expected result, priority, and test type. Both positive tests using valid inputs and negative tests using invalid inputs or error conditions will be included.
+
+A total of 12 test cases will be executed. At least three test cases will explicitly cover negative or error-path scenarios. Regression testing will be performed after defects are fixed to verify that previously working functionality continues to pass.
+
+## 6. Pass/Fail Criteria
+
+A test case will be marked **PASS** when the actual result matches the expected result and the required functionality behaves correctly.
+
+A test case will be marked **FAIL** when the actual result differs from the expected result or the required behavior is not achieved.
+
+A test case will be marked **BLOCKED** when it cannot be executed because of an unavailable dependency, environment problem, or other external condition.
+
+The overall test cycle will be considered successful when:
+
+* At least **95% of the 12 planned test cases pass**.
+* **0 Critical defects** remain open.
+* All requirements have at least one linked test case in the RTM.
+* All failed test cases have a corresponding GitHub Issue.
+
 ## 7. Test Deliverables
 
-The test deliverables will include the completed test plan, twelve documented test cases, a requirements traceability matrix (RTM), manual test execution results, and GitHub Issues for any failed test cases. These artifacts will provide evidence of test coverage, test execution, and defect tracking.
+The test deliverables will include:
+
+* `docs/test-plan.md`
+* `docs/test-cases.md`
+* `docs/rtm.md`
+* Manual test execution results
+* GitHub Issues for failed test cases
+* Defect and retest evidence where applicable
+
+These artifacts will provide evidence of test coverage, execution, traceability, and defect tracking.
+
 ## 8. Environmental Needs
 
-Testing will be performed using Python 3.14.7 and the SQE GradeBook GitHub repository. The tests will be executed against the Python source code using the development environment available to the tester. GitHub will be used to manage the test documentation and to track any defects discovered during testing.
+Testing will be performed using Python 3.14.7 and the SQE GradeBook GitHub repository. Tests will be executed against the Python source code using the development environment available to the tester. Pytest will be used for automated verification where appropriate, while the Lab 4 manual execution pass will record individual test results. GitHub will be used to manage the source code, test documentation, and defect issues.
+
 ## 9. Schedule
 
 Testing activities will be completed in the following sequence:
 
-1. Prepare the test plan and define the requirements.
-2. Create twelve test cases covering the required GradeBook functionality.
-3. Build and review the requirements traceability matrix.
-4. Execute all test cases manually and record PASS, FAIL, or BLOCKED results.
-5. Create GitHub Issues for any failed test cases.
-6. Perform regression testing after defects are fixed.
-7. Review the final test results and testing artifacts for completeness.
-8. ## 10. Risks
+1. Review and document GradeBook requirements.
+2. Prepare the Test Plan.
+3. Create 12 test cases.
+4. Build and review the Requirements Traceability Matrix.
+5. Execute all 12 test cases manually.
+6. Record PASS, FAIL, or BLOCKED results.
+7. Create GitHub Issues for failed tests.
+8. Fix identified defects where required.
+9. Perform regression testing after fixes.
+10. Review the final testing artifacts.
 
-The main testing risks include incomplete test coverage, defects that are not identified during manual testing, and environment-related problems that may prevent test execution. Changes made to fix defects may introduce regressions in existing functionality. Limited testing time may also reduce the number of scenarios that can be executed. These risks will be reduced by using the RTM to track coverage, recording all test results, and performing regression checks after fixes.
+## 10. Risks
+
+The main testing risks include incomplete test coverage, defects that are not identified during testing, and environment-related problems that may prevent test execution. Changes made to fix defects may introduce regressions in existing functionality. Limited testing time may also reduce the number of scenarios that can be executed.
+
+These risks will be reduced by using the RTM to track requirements coverage, recording all test results, creating GitHub Issues for defects, and performing regression testing after fixes.
