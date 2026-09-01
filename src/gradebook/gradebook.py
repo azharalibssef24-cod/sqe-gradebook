@@ -12,9 +12,11 @@ class Student:
         Student.student_ids.add(student_id)
 
     def add_score(self, score):
-        """Add a non-negative score to the student's score list."""
+        """Add a score between 0 and 100 to the student's score list."""
         if score < 0:
             raise ValueError("Score cannot be negative")
+        if score > 100:
+            raise ValueError("Score cannot be greater than 100")
         self.scores.append(score)
 
     def average(self):
