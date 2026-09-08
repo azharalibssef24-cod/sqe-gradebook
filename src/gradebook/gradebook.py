@@ -23,3 +23,16 @@ class Student:
         if not self.scores:
             return 0.0
         return sum(self.scores) / len(self.scores)
+        def letter_grade(score):
+    if score < 0 or score > 100:
+        raise ValueError("Score must be between 0 and 100")
+    elif score <= 59:
+        return "F"
+    elif score <= 69:
+        return "D"
+    elif score <= 79:
+        return "C"
+    elif score <= 89:
+        return "B"
+    else:
+        return "A"
