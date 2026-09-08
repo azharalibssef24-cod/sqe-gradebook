@@ -17,8 +17,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install pytest
-        run: |
+           - name: Run tests
+        run: PYTHONPATH=. pytest
           python -m pip install --upgrade pip
           pip install pytest
 
