@@ -1,6 +1,6 @@
 import pytest
 
-from gradebook.gradebook import letter_grade
+from src.gradebook.gradebook import letter_grade
 
 
 @pytest.mark.parametrize('score,expected', [
