@@ -39,3 +39,12 @@ def letter_grade(score):
         return "B"
     else:
         return "A"
+        
+class Roster:
+    def add_student(self, student):
+        score_count = len(student.scores)
+
+        if score_count < 1 or score_count > 6:
+            raise ValueError("Student must have 1 to 6 scores")
+
+        return True
