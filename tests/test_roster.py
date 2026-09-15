@@ -21,3 +21,24 @@ def test_roster_score_classes(score_count, expected_error):
             roster.add_student(student)
     else:
         assert roster.add_student(student) is True
+        @pytest.mark.parametrize('score_count,expected_error', [
+    (0, True),
+    (1, False),
+    (2, False),
+    (5, False),
+    (6, False),
+    (7, True),
+])
+def test_roster_score_count_boundaries(score_count, expected_error):
+    student = Student("BVA Student", f"bva_student_{score_count}")
+
+    for score in range(score_count):
+        student.add_score(50)
+
+    roster = Roster()
+
+    if expected_error:
+        with pytest.raises(ValueError):
+            roster.add_student(student)
+    else:
+        assert roster.add_student(student) is True
