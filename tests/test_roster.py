@@ -10,7 +10,7 @@ from src.gradebook.gradebook import Student, Roster
 ])
 def test_roster_score_classes(score_count, expected_error):
     student = Student("Ali", f"student{score_count}")
-    
+
     for score in range(score_count):
         student.add_score(50)
 
@@ -21,7 +21,9 @@ def test_roster_score_classes(score_count, expected_error):
             roster.add_student(student)
     else:
         assert roster.add_student(student) is True
-        @pytest.mark.parametrize('score_count,expected_error', [
+
+
+@pytest.mark.parametrize('score_count,expected_error', [
     (0, True),
     (1, False),
     (2, False),
