@@ -121,3 +121,35 @@ def test_reject_minimum_invalid_score():
     # Act + Assert
     with pytest.raises(ValueError, match="Score cannot be negative"):
         student.add_score(-1)
+@pytest.mark.parametrize(
+    "score,expected_error",
+    [
+        (-1, True),
+        (0, False),
+        (1, False),
+        (50, False),
+        (99, False),
+        (100, False),
+        (101, True),
+    ],
+    ids=[
+        "below-minimum",
+        "minimum-boundary",
+        "just-above-minimum",
+        "middle-valid-score",
+        "just-below-maximum",
+        "maximum-boundary",
+        "above-maximum",
+    ],
+)
+def test_add_score_edge_cases(score, expected_error):
+    # Arrange
+    student = Student("Edge Case Student", "edge_case_student")
+
+    # Act + Assert
+    if expected_error:
+        with pytest.raises((ValueError, TypeError)):
+            student.add_score(score)
+    else:
+        student.add_score(score)
+        assert student.scores == [score]
