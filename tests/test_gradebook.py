@@ -144,7 +144,7 @@ def test_reject_minimum_invalid_score():
 )
 def test_add_score_edge_cases(score, expected_error):
     # Arrange
-    student = Student("Edge Case Student", "edge_case_student")
+    student = Student("Edge Case Student", f"edge_case_{score}")
 
     # Act + Assert
     if expected_error:
