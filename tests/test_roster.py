@@ -60,3 +60,40 @@ def test_roster_score_count_boundaries(score_count, expected_error):
             roster.add_student(student)
     else:
         assert roster.add_student(student) is True
+        def test_class_average_empty_roster():
+    # Arrange
+    roster = Roster()
+
+    # Act
+    result = roster.class_average()
+
+    # Assert
+    assert result == 0.0
+
+
+def test_class_average_single_student(student_with_scores):
+    # Arrange
+    roster = Roster()
+    roster.add_student(student_with_scores)
+
+    # Act
+    result = roster.class_average()
+
+    # Assert
+    assert result == pytest.approx(85.0)
+
+
+def test_class_average_multiple_students(student_with_scores):
+    # Arrange
+    roster = Roster()
+    roster.add_student(student_with_scores)
+
+    second_student = Student("Sara", "class_average_sara")
+    second_student.add_score(70)
+    roster.add_student(second_student)
+
+    # Act
+    result = roster.class_average()
+
+    # Assert
+    assert result == pytest.approx(77.5)
