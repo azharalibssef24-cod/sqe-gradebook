@@ -63,3 +63,19 @@ class Roster:
             raise GradeBookIOError(
                 "Unable to save roster to file"
             ) from e
+
+
+def validate_name(name):
+    if not isinstance(name, str):
+        raise ValueError("Name must be a string")
+
+    if len(name) == 0 or len(name) > 50:
+        raise ValueError("Name must be between 1 and 50 characters")
+
+    for char in name:
+        if not (char.isalpha() or char in " -"):
+            raise ValueError(
+                "Name can contain only letters, spaces, and hyphens"
+            )
+
+    return True
