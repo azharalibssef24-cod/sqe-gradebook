@@ -60,7 +60,9 @@ def test_roster_score_count_boundaries(score_count, expected_error):
             roster.add_student(student)
     else:
         assert roster.add_student(student) is True
-        def test_class_average_empty_roster():
+
+
+def test_class_average_empty_roster():
     # Arrange
     roster = Roster()
 
