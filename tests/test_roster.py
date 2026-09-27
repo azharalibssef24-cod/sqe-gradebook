@@ -1,6 +1,7 @@
 import pytest
+from unittest.mock import mock_open, patch
 
-from src.gradebook.gradebook import Student, Roster
+from src.gradebook.gradebook import Student, Roster, GradeBookIOError
 
 
 def test_roster_accepts_valid_student(student_with_scores):
@@ -99,3 +100,25 @@ def test_class_average_multiple_students(student_with_scores):
 
     # Assert
     assert result == pytest.approx(77.5)
+def test_save_to_file_writes_roster_content():
+    # Arrange
+    roster = Roster()
+    fake_file = mock_open()
+
+    # Act
+    with patch("builtins.open", fake_file):
+        roster.save_to_file("roster.txt")
+
+    # Assert
+    fake_file.assert_called_once_with("roster.txt", "w")
+    fake_file().write.assert_called_once_with("GradeBook Roster\n")
+
+
+def test_save_to_file_converts_os_error_to_gradebook_io_error():
+    # Arrange
+    roster = Roster()
+
+    # Act + Assert
+    with patch("builtins.open", side_effect=OSError("Disk error")):
+        with pytest.raises(GradeBookIOError, match="Unable to save roster to file"):
+            roster.save_to_file("roster.txt")
