@@ -7,9 +7,16 @@ from src.gradebook.gradebook import Student
 def student_with_scores():
     # Function scope is the default.
     # A new student is created for each test, which keeps tests independent.
-    student = Student("Test Student", "fixture_student")
+    student_id = "fixture_student"
+
+    # Remove the fixture ID after previous tests if it remains
+    # in the class-level student ID collection.
+    Student.student_ids.discard(student_id)
+
+    student = Student("Test Student", student_id)
     student.add_score(80)
     student.add_score(90)
+
     return student
 
 
