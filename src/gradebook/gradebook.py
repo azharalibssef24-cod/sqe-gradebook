@@ -47,13 +47,35 @@ def letter_grade(score):
 
 
 class Roster:
+    def __init__(self):
+        self.students = []
+
     def add_student(self, student):
         score_count = len(student.scores)
 
         if score_count < 1 or score_count > 6:
             raise ValueError("Student must have 1 to 6 scores")
 
+        self.students.append(student)
+
         return True
+
+    def class_average(self):
+        if not self.students:
+            return 0.0
+
+        total = sum(student.average() for student in self.students)
+
+        return total / len(self.students)
+
+    def save_to_file(self, path):
+        try:
+            with open(path, "w") as file:
+                file.write("GradeBook Roster\n")
+        except OSError as e:
+            raise GradeBookIOError(
+                "Unable to save roster to file"
+            ) from e
 
     def save_to_file(self, path):
         try:
