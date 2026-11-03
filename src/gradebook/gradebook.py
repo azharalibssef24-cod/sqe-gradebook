@@ -111,9 +111,10 @@ def validate_name(name):
     return True
 
 
-# Lab 8 - Cycle 2: GREEN
+# Lab 8 - Cycle 3: GREEN
 def rank_students(roster):
-    if not roster.students:
-        return []
-
-    return [roster.students[0]]
+    return sorted(
+        roster.students,
+        key=lambda student: student.average(),
+        reverse=True
+    )
