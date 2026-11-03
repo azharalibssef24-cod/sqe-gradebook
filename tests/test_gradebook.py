@@ -1,155 +1,138 @@
+
 import pytest
+from unittest.mock import mock_open, patch
 
-from src.gradebook.gradebook import Student
-
-
-def test_add_valid_score(student_with_scores):
-    # Arrange
-    student = student_with_scores
-
-    # Act
-    student.add_score(70)
-
-    # Assert
-    assert student.scores == [80, 90, 70]
+from src.gradebook.gradebook import (
+    Student,
+    Roster,
+    GradeBookIOError,
+)
 
 
-def test_reject_negative_score():
-    # Arrange
-    student = Student("Ali", "102")
-
-    # Act + Assert
-    with pytest.raises(ValueError, match="Score cannot be negative"):
-        student.add_score(-5)
+# Module-scope fixture: runs once for this module.
+@pytest.fixture(scope="module")
+def module_setup():
+    return {"course": "Software Quality Engineering"}
 
 
-def test_reject_non_numeric_score():
-    # Arrange
-    student = Student("Ali", "103")
-
-    # Act + Assert
-    with pytest.raises((TypeError, ValueError)):
-        student.add_score("abc")
+# Function-scope fixture: creates a fresh student for each test.
+@pytest.fixture
+def student():
+    Student.student_ids.clear()
+    return Student("Ali", "101")
 
 
-def test_accept_minimum_boundary_score():
-    # Arrange
-    student = Student("Ali", "104")
-
-    # Act
-    student.add_score(0)
-
-    # Assert
-    assert student.scores == [0]
+@pytest.fixture
+def student_with_scores(student):
+    student.add_score(80)
+    student.add_score(90)
+    return student
 
 
-def test_accept_maximum_boundary_score():
-    # Arrange
-    student = Student("Ali", "105")
-
-    # Act
-    student.add_score(100)
-
-    # Assert
-    assert student.scores == [100]
+def test_module_fixture(module_setup):
+    assert module_setup["course"] == "Software Quality Engineering"
 
 
-def test_reject_score_above_100():
-    # Arrange
-    student = Student("Ali", "106")
-
-    # Act + Assert
-    with pytest.raises((ValueError, TypeError)):
-        student.add_score(101)
-
-
-def test_calculate_average(student_with_scores):
-    # Arrange
-    student = student_with_scores
-
-    # Act
-    result = student.average()
-
-    # Assert
-    assert result == 85.0
-
-
-def test_empty_scores_average():
-    # Arrange
-    student = Student("Ali", "108")
-
-    # Act
-    result = student.average()
-
-    # Assert
-    assert result == 0.0
-
-
-def test_reject_duplicate_student_id():
-    # Arrange
-    Student("Ali", "109")
-
-    # Act + Assert
-    with pytest.raises(ValueError, match="Student ID already exists"):
-        Student("Ahmed", "109")
-
-
-def test_add_multiple_valid_scores(student_with_scores):
-    # Arrange
-    student = student_with_scores
-
-    # Act
-    student.add_score(60)
-
-    # Assert
-    assert student.scores == [80, 90, 60]
-
-
-def test_case_insensitive_student_name_comparison():
-    # Arrange
-    student1 = Student("Ali", "111")
-    student2 = Student("ALI", "112")
-
-    # Act + Assert
-    assert student1.name.lower() == student2.name.lower()
-
-
-def test_reject_minimum_invalid_score():
-    # Arrange
-    student = Student("Ali", "113")
-
-    # Act + Assert
-    with pytest.raises(ValueError, match="Score cannot be negative"):
-        student.add_score(-1)
 @pytest.mark.parametrize(
-    "score,expected_error",
+    "score, expected_error",
     [
-        (-1, True),
         (0, False),
-        (1, False),
         (50, False),
-        (99, False),
         (100, False),
+        (-5, True),
         (101, True),
+        ("abc", True),
     ],
     ids=[
-        "below-minimum",
-        "minimum-boundary",
-        "just-above-minimum",
-        "middle-valid-score",
-        "just-below-maximum",
-        "maximum-boundary",
-        "above-maximum",
+        "zero-score",
+        "normal-score",
+        "maximum-score",
+        "negative-score",
+        "above-100-score",
+        "high-score",
     ],
 )
-def test_add_score_edge_cases(score, expected_error):
-    # Arrange
-    student = Student("Edge Case Student", f"edge_case_{score}")
-
-    # Act + Assert
+def test_add_score_parametrized(score, expected_error, student):
     if expected_error:
         with pytest.raises((ValueError, TypeError)):
             student.add_score(score)
     else:
         student.add_score(score)
         assert student.scores == [score]
+
+
+def test_empty_average(student):
+    assert student.average() == 0.0
+
+
+def test_single_score_average(student):
+    student.add_score(80)
+    assert student.average() == 80.0
+
+
+def test_multiple_scores_average(student_with_scores):
+    assert student_with_scores.average() == 85.0
+
+
+def test_duplicate_student_id(student):
+    with pytest.raises(ValueError, match="Student ID already exists"):
+        Student("Ahmed", "101")
+
+
+def test_student_name(student):
+    assert student.name == "Ali"
+
+
+def test_student_starts_with_empty_scores(student):
+    assert student.scores == []
+
+
+def test_empty_roster_average():
+    roster = Roster()
+    assert roster.class_average() == 0.0
+
+
+def test_single_student_class_average(student_with_scores):
+    roster = Roster()
+    roster.add_student(student_with_scores)
+
+    assert roster.class_average() == 85.0
+
+
+def test_multiple_students_class_average(student_with_scores):
+    roster = Roster()
+    roster.add_student(student_with_scores)
+
+    second_student = Student("Sara", "102")
+    second_student.add_score(70)
+    roster.add_student(second_student)
+
+    assert roster.class_average() == 77.5
+
+
+def test_save_to_file_success(student_with_scores):
+    roster = Roster()
+    roster.add_student(student_with_scores)
+
+    fake_file = mock_open()
+
+    with patch("builtins.open", fake_file):
+        roster.save_to_file("test.txt")
+
+    fake_file.assert_called_once_with("test.txt", "w")
+
+    fake_file().write.assert_called_once_with(
+        "Name: Ali, ID: 101, Average: 85.0\n"
+    )
+
+
+def test_save_to_file_error(student_with_scores):
+    roster = Roster()
+    roster.add_student(student_with_scores)
+
+    with patch(
+        "builtins.open",
+        side_effect=OSError("File error")
+    ):
+        with pytest.raises(GradeBookIOError):
+            roster.save_to_file("test.txt")

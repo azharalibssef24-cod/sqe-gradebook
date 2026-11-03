@@ -1,36 +1,37 @@
+
 import pytest
 from unittest.mock import mock_open, patch
 
 from src.gradebook.gradebook import Student, Roster, GradeBookIOError
 
 
+@pytest.fixture
+def student_with_scores():
+    Student.student_ids.clear()
+    student = Student("Ali", "roster_101")
+    student.add_score(80)
+    student.add_score(90)
+    return student
+
+
 def test_roster_accepts_valid_student(student_with_scores):
-    # Arrange
-    student = student_with_scores
     roster = Roster()
-
-    # Act
-    result = roster.add_student(student)
-
-    # Assert
+    result = roster.add_student(student_with_scores)
     assert result is True
 
 
-@pytest.mark.parametrize('score_count,expected_error', [
-    (0, True),
-    (3, False),
-    (8, True),
-])
+@pytest.mark.parametrize(
+    "score_count,expected_error",
+    [(0, True), (3, False), (8, True)],
+)
 def test_roster_score_classes(score_count, expected_error):
-    # Arrange
-    student = Student("Ali", f"student{score_count}")
+    student = Student("Ali", f"student_{score_count}")
 
     for score in range(score_count):
         student.add_score(50)
 
     roster = Roster()
 
-    # Act + Assert
     if expected_error:
         with pytest.raises(ValueError):
             roster.add_student(student)
@@ -38,16 +39,11 @@ def test_roster_score_classes(score_count, expected_error):
         assert roster.add_student(student) is True
 
 
-@pytest.mark.parametrize('score_count,expected_error', [
-    (0, True),
-    (1, False),
-    (2, False),
-    (5, False),
-    (6, False),
-    (7, True),
-])
+@pytest.mark.parametrize(
+    "score_count,expected_error",
+    [(0, True), (1, False), (2, False), (5, False), (6, False), (7, True)],
+)
 def test_roster_score_count_boundaries(score_count, expected_error):
-    # Arrange
     student = Student("BVA Student", f"bva_student_{score_count}")
 
     for score in range(score_count):
@@ -55,7 +51,6 @@ def test_roster_score_count_boundaries(score_count, expected_error):
 
     roster = Roster()
 
-    # Act + Assert
     if expected_error:
         with pytest.raises(ValueError):
             roster.add_student(student)
@@ -64,30 +59,17 @@ def test_roster_score_count_boundaries(score_count, expected_error):
 
 
 def test_class_average_empty_roster():
-    # Arrange
     roster = Roster()
-
-    # Act
-    result = roster.class_average()
-
-    # Assert
-    assert result == 0.0
+    assert roster.class_average() == 0.0
 
 
 def test_class_average_single_student(student_with_scores):
-    # Arrange
     roster = Roster()
     roster.add_student(student_with_scores)
-
-    # Act
-    result = roster.class_average()
-
-    # Assert
-    assert result == pytest.approx(85.0)
+    assert roster.class_average() == pytest.approx(85.0)
 
 
 def test_class_average_multiple_students(student_with_scores):
-    # Arrange
     roster = Roster()
     roster.add_student(student_with_scores)
 
@@ -95,30 +77,26 @@ def test_class_average_multiple_students(student_with_scores):
     second_student.add_score(70)
     roster.add_student(second_student)
 
-    # Act
-    result = roster.class_average()
+    assert roster.class_average() == pytest.approx(77.5)
 
-    # Assert
-    assert result == pytest.approx(77.5)
+
 def test_save_to_file_writes_roster_content():
-    # Arrange
     roster = Roster()
     fake_file = mock_open()
 
-    # Act
     with patch("builtins.open", fake_file):
         roster.save_to_file("roster.txt")
 
-    # Assert
     fake_file.assert_called_once_with("roster.txt", "w")
     fake_file().write.assert_called_once_with("GradeBook Roster\n")
 
 
 def test_save_to_file_converts_os_error_to_gradebook_io_error():
-    # Arrange
     roster = Roster()
 
-    # Act + Assert
     with patch("builtins.open", side_effect=OSError("Disk error")):
-        with pytest.raises(GradeBookIOError, match="Unable to save roster to file"):
+        with pytest.raises(
+            GradeBookIOError,
+            match="Unable to save roster to file",
+        ):
             roster.save_to_file("roster.txt")

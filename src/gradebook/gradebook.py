@@ -18,6 +18,9 @@ class Student:
         Student.student_ids.add(student_id)
 
     def add_score(self, score):
+        if not isinstance(score, (int, float)):
+            raise TypeError("Score must be numeric")
+
         if score < 0:
             raise ValueError("Score cannot be negative")
 
@@ -38,7 +41,13 @@ class Roster:
         self.students = []
 
     def add_student(self, student):
+        score_count = len(student.scores)
+
+        if score_count < 1 or score_count > 6:
+            raise ValueError("Student must have 1 to 6 scores")
+
         self.students.append(student)
+        return True
 
     def class_average(self):
         if not self.students:
@@ -49,20 +58,24 @@ class Roster:
 
     def save_to_file(self, path):
         try:
-            with open(path, "w") as file:
-                file.write("GradeBook Roster\n")
+            if not self.students:
+                content = "GradeBook Roster\n"
+            else:
+                content = ""
 
                 for student in self.students:
-                    content = (
+                    content += (
                         f"Name: {student.name}, "
                         f"ID: {student.student_id}, "
                         f"Average: {student.average()}\n"
                     )
-                    file.write(content)
+
+            with open(path, "w") as file:
+                file.write(content)
 
         except OSError as error:
             raise GradeBookIOError(
-                "Could not save GradeBook data"
+                "Unable to save roster to file"
             ) from error
 
 

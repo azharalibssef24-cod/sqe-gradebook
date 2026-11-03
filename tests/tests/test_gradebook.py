@@ -143,9 +143,16 @@ def test_save_to_file_success(student):
     )
 
 
-def test_save_to_file_error(student):
+def test_save_to_file_error(student_with_scores):
     roster = Roster()
-    roster.add_student(student)
+    roster.add_student(student_with_scores)
+
+    with patch(
+        "builtins.open",
+        side_effect=OSError("File error")
+    ):
+        with pytest.raises(GradeBookIOError):
+            roster.save_to_file("test.txt")
 
     with patch("builtins.open", side_effect=OSError("Disk error")):
         with pytest.raises(GradeBookIOError):
