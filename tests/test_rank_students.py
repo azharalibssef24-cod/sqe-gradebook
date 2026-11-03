@@ -1,4 +1,3 @@
-
 from src.gradebook.gradebook import Roster, Student, rank_students
 
 
@@ -16,3 +15,24 @@ def test_rank_students_single_student_returns_that_student():
     roster.add_student(student)
 
     assert rank_students(roster) == [student]
+
+
+def test_rank_students_sorts_by_average_descending():
+    roster = Roster()
+
+    ali = Student("Ali", 102)
+    ali.add_score(90)
+
+    sara = Student("Sara", 103)
+    sara.add_score(80)
+
+    ahmed = Student("Ahmed", 104)
+    ahmed.add_score(70)
+
+    roster.add_student(ali)
+    roster.add_student(sara)
+    roster.add_student(ahmed)
+
+    expected = [ali, sara, ahmed]
+
+    assert rank_students(roster) == expected
