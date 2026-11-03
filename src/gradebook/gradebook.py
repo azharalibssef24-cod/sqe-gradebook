@@ -111,6 +111,9 @@ def validate_name(name):
     return True
 
 
-# Lab 8 - Cycle 1: GREEN
+# Lab 8 - Cycle 2: GREEN
 def rank_students(roster):
-    return []
+    if not roster.students:
+        return []
+
+    return [roster.students[0]]
