@@ -1,3 +1,9 @@
+﻿
+class GradeBookIOError(Exception):
+    """Custom exception for file operation errors."""
+    pass
+
+
 class Student:
     student_ids = set()
 
@@ -12,22 +18,52 @@ class Student:
         Student.student_ids.add(student_id)
 
     def add_score(self, score):
-        """Add a score between 0 and 100 to the student's score list."""
         if score < 0:
             raise ValueError("Score cannot be negative")
+
         if score > 100:
             raise ValueError("Score cannot be greater than 100")
+
         self.scores.append(score)
 
     def average(self):
         if not self.scores:
             return 0.0
+
         return sum(self.scores) / len(self.scores)
 
 
-class GradeBookIOError(Exception):
-    """Raised when a GradeBook file operation fails."""
-    pass
+class Roster:
+    def __init__(self):
+        self.students = []
+
+    def add_student(self, student):
+        self.students.append(student)
+
+    def class_average(self):
+        if not self.students:
+            return 0.0
+
+        total = sum(student.average() for student in self.students)
+        return total / len(self.students)
+
+    def save_to_file(self, path):
+        try:
+            with open(path, "w") as file:
+                file.write("GradeBook Roster\n")
+
+                for student in self.students:
+                    content = (
+                        f"Name: {student.name}, "
+                        f"ID: {student.student_id}, "
+                        f"Average: {student.average()}\n"
+                    )
+                    file.write(content)
+
+        except OSError as error:
+            raise GradeBookIOError(
+                "Could not save GradeBook data"
+            ) from error
 
 
 def letter_grade(score):
@@ -44,47 +80,6 @@ def letter_grade(score):
         return "B"
     else:
         return "A"
-
-
-class Roster:
-    def __init__(self):
-        self.students = []
-
-    def add_student(self, student):
-        score_count = len(student.scores)
-
-        if score_count < 1 or score_count > 6:
-            raise ValueError("Student must have 1 to 6 scores")
-
-        self.students.append(student)
-
-        return True
-
-    def class_average(self):
-        if not self.students:
-            return 0.0
-
-        total = sum(student.average() for student in self.students)
-
-        return total / len(self.students)
-
-    def save_to_file(self, path):
-        try:
-            with open(path, "w") as file:
-                file.write("GradeBook Roster\n")
-        except OSError as e:
-            raise GradeBookIOError(
-                "Unable to save roster to file"
-            ) from e
-
-    def save_to_file(self, path):
-        try:
-            with open(path, "w") as file:
-                file.write("GradeBook Roster\n")
-        except OSError as e:
-            raise GradeBookIOError(
-                "Unable to save roster to file"
-            ) from e
 
 
 def validate_name(name):
