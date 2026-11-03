@@ -109,3 +109,8 @@ def validate_name(name):
             )
 
     return True
+
+
+# Lab 8 - Cycle 1: GREEN
+def rank_students(roster):
+    return []
