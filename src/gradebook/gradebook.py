@@ -109,3 +109,11 @@ def validate_name(name):
             )
 
     return True
+
+
+# Lab 8 - Cycle 4: GREEN
+def rank_students(roster):
+    return sorted(
+        roster.students,
+        key=lambda student: (-student.average(), student.name.lower())
+    )
