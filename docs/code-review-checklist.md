@@ -25,6 +25,13 @@
 - [ ] Could the changes introduce security or performance problems?
 - [ ] Could the changes break existing GradeBook functionality?
 
-## Lessons Learned
+### Lessons Learned
 
-To be completed after the code review and correction process.
+1. Code reviews help identify incorrect formulas and missing edge-case handling.
+2. Empty rosters and single-student rosters require explicit validation.
+3. Descriptive variable names and docstrings improve code readability.
+4. Unit tests help verify correctness after review feedback.
+5. Reviewing student membership prevents invalid input from producing unexpected results.
+6. GitHub inline comments provide a clear way to communicate code improvements.
+7. Formal review approval was not recorded because the PR author could not formally approve their own pull request.
+8. All automated checks passed before merging the pull request.
