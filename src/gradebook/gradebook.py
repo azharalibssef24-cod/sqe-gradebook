@@ -110,10 +110,33 @@ def validate_name(name):
 
     return True
 
-
 # Lab 8 - Cycle 4: GREEN
 def rank_students(roster):
     return sorted(
         roster.students,
         key=lambda student: (-student.average(), student.name.lower())
     )
+
+
+# Lab 9 - Student Percentile
+def percentile(student, roster):
+    """Calculate a student's percentile based on their average score."""
+
+    if not roster.students:
+        raise ValueError("Roster cannot be empty")
+
+    if student not in roster.students:
+        raise ValueError("Student does not belong to this roster")
+
+    sorted_students = sorted(
+        roster.students,
+        key=lambda student_item: student_item.average()
+    )
+
+    rank_index = sorted_students.index(student)
+    total_students = len(sorted_students)
+
+    if total_students == 1:
+        return 100.0
+
+    return (rank_index / (total_students - 1)) * 100
