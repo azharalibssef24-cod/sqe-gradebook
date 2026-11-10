@@ -109,3 +109,11 @@ def validate_name(name):
             )
 
     return True
+
+def percentile(student, roster):
+    students = sorted(roster.students, key=lambda s: s.average())
+    rank_index = students.index(student)
+    total_students = len(students)
+
+    result = (rank_index / total_students) * 100
+    return result
