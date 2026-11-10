@@ -110,6 +110,15 @@ def validate_name(name):
 
     return True
 
+# Lab 8 - Cycle 4: GREEN
+def rank_students(roster):
+    return sorted(
+        roster.students,
+        key=lambda student: (-student.average(), student.name.lower())
+    )
+
+
+# Lab 9 - Student Percentile
 def percentile(student, roster):
     """Calculate a student's percentile based on their average score."""
 
