@@ -111,9 +111,23 @@ def validate_name(name):
     return True
 
 def percentile(student, roster):
-    students = sorted(roster.students, key=lambda s: s.average())
-    rank_index = students.index(student)
-    total_students = len(students)
+    """Calculate a student's percentile based on their average score."""
 
-    result = (rank_index / total_students) * 100
-    return result
+    if not roster.students:
+        raise ValueError("Roster cannot be empty")
+
+    if student not in roster.students:
+        raise ValueError("Student does not belong to this roster")
+
+    sorted_students = sorted(
+        roster.students,
+        key=lambda student_item: student_item.average()
+    )
+
+    rank_index = sorted_students.index(student)
+    total_students = len(sorted_students)
+
+    if total_students == 1:
+        return 100.0
+
+    return (rank_index / (total_students - 1)) * 100

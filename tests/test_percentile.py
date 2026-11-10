@@ -44,5 +44,19 @@ def test_percentile_for_single_student():
 def test_percentile_for_empty_roster():
     roster = Roster()
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Roster cannot be empty"):
         percentile(None, roster)
+
+
+def test_percentile_for_student_not_in_roster():
+    roster = Roster()
+
+    s1 = Student("Ali", "P106")
+    s1.add_score(90)
+    roster.add_student(s1)
+
+    outside_student = Student("Ahmed", "P107")
+    outside_student.add_score(70)
+
+    with pytest.raises(ValueError, match="Student does not belong to this roster"):
+        percentile(outside_student, roster)
