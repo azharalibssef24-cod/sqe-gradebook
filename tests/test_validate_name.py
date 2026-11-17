@@ -36,3 +36,6 @@ def test_validate_name_length_boundaries(length, expected_error):
             validate_name(name)
     else:
         assert validate_name(name) is True
+def test_validate_name_rejects_non_string():
+    with pytest.raises(ValueError, match="Name must be a string"):
+        validate_name(123)

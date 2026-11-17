@@ -134,5 +134,8 @@ def test_save_to_file_error(student_with_scores):
         "builtins.open",
         side_effect=OSError("File error")
     ):
-        with pytest.raises(GradeBookIOError):
+       with pytest.raises(
+    GradeBookIOError,
+    match="Unable to save roster to file"
+):
             roster.save_to_file("test.txt")
